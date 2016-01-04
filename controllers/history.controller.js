@@ -24,7 +24,7 @@ function loadMoreHistory(req, res){
 	*/
 
 	var searchDate = moment(currentDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-	searchDate = new Date(searchDate + "T17:00:00.000Z");
+	searchDate = new Date(searchDate + "T00:00:00.000Z");
 
 	global.Server.Model.OrderModel
 		.aggregate(

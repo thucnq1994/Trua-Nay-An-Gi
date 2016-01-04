@@ -22,15 +22,13 @@ function getMenuListByDay(req, res){
 		
 		// Get yesterday date to compare with database
 		orderDate = verifyDate.subtract(1, 'days').format("YYYY-MM-DD");
-		orderDate = new Date(orderDate + "T17:00:00.000Z");
+		orderDate = new Date(orderDate + "T00:00:00.000Z");
 
 		var currentChoide = null;
 
 		global.Server.Model.MenuModel.find({ menuDate : orderDate }, function(err, menus) {
 
 			menus = menus.sort({'foodName' : -1});
-
-			console.log(menus);
 
 			global.Server.Model.OrderModel.findOne({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order) {
 
@@ -99,7 +97,7 @@ function orderFoodByDay(req, res){
 			return;
 	  	} else {
 	  		var searchDate = moment(orderDate, "DD/MM/YYYY").subtract(1, 'days').format("YYYY-MM-DD");
-			searchDate = new Date(searchDate + "T17:00:00.000Z");
+			searchDate = new Date(searchDate + "T00:00:00.000Z");
 			global.Server.Model.OrderModel.findOne({orderDate : searchDate}, function(err, data) {
 
 			  	if(data) {
