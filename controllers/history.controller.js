@@ -56,8 +56,8 @@ function loadMoreHistory(req, res){
 										nextDate = curDate.date;
 									}
 
-									var searchDateLT = new Date(moment(item._id).format("YYYY-MM-DD") + "T17:00:00.000Z");
-									var searchDateGT = new Date(moment(item._id).subtract(1, 'days').format("YYYY-MM-DD") + "T17:00:00.000Z");
+									var searchDateLT = new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z");
+									var searchDateGT = new Date(moment(item._id).subtract(1, 'days').format("YYYY-MM-DD") + "T00:00:00.000Z");
 
 									console.log('Ngay thang ben ngoai model: ', curDate.date);
 

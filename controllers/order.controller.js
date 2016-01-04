@@ -21,7 +21,7 @@ function getMenuListByDay(req, res){
 		}
 		
 		// Get yesterday date to compare with database
-		orderDate = verifyDate.subtract(1, 'days').format("YYYY-MM-DD");
+		orderDate = verifyDate.format("YYYY-MM-DD");
 		orderDate = new Date(orderDate + "T00:00:00.000Z");
 
 		var currentChoide = null;
