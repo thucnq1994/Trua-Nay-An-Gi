@@ -44,7 +44,7 @@ function getMenuListByDay(req, res){
 					priv_date = 'today';
 				}
 
-				var next_date = verifyDate.add(1, 'days').format("DD-MM-YYYY");
+				var next_date = verifyDate.add(2, 'days').format("DD-MM-YYYY");
 				if(next_date === moment().format("DD-MM-YYYY")){
 					next_date = 'today';
 				}
