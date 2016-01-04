@@ -95,8 +95,8 @@ function orderFoodByDay(req, res){
 			return;
 	  	} else {
 	  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-			searchDate = new Date(searchDate + "T00:00:00.000Z");
-			global.Server.Model.OrderModel.findOne({orderDate : searchDate}, function(err, data) {
+				searchDate = new Date(searchDate + "T00:00:00.000Z");
+				global.Server.Model.OrderModel.findOne({orderDate : searchDate}, function(err, data) {
 
 			  	if(data) {
 			  		//if update order equal current order, delete it
