@@ -20,9 +20,7 @@ function getMenuListByDay(req, res){
 			res.redirect('/order/today');
 		}
 		
-		// Get yesterday date to compare with database
-		orderDate = verifyDate.format("YYYY-MM-DD");
-		orderDate = new Date(orderDate + "T00:00:00.000Z");
+		orderDate = new Date(verifyDate.format("YYYY-MM-DD") + "T00:00:00.000Z");
 
 		var currentChoide = null;
 
@@ -96,7 +94,7 @@ function orderFoodByDay(req, res){
 	  		res.send(JSON.stringify(data));
 			return;
 	  	} else {
-	  		var searchDate = moment(orderDate, "DD/MM/YYYY").subtract(1, 'days').format("YYYY-MM-DD");
+	  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
 			searchDate = new Date(searchDate + "T00:00:00.000Z");
 			global.Server.Model.OrderModel.findOne({orderDate : searchDate}, function(err, data) {
 
