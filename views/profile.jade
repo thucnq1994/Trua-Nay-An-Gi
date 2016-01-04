@@ -1,0 +1,35 @@
+doctype
+html( lang="en" )
+    include ./template/head.jade
+    body
+        .container
+            include ./template/menu.jade
+            div.row
+                div.col-md-4.col-sm-12.col-xs-12
+                    .list-group
+                        if avatar
+                        .list-group-item( href="#" )
+                            img.center-block.img-circle(src=avatar)
+                        if data.current_user.id
+                        .list-group-item( href="#" )
+                            h4.list-group-item-heading ID
+                            p.list-group-item-text!=data.current_user.id
+                        if data.current_user.displayName
+                        .list-group-item( href="#" )
+                            h4.list-group-item-heading Name
+                            p.list-group-item-text!=data.current_user.displayName
+                        if data.current_user.email
+                            .list-group-item( href="#" )
+                                h4.list-group-item-heading Email
+                                p.list-group-item-text!=data.current_user.email
+                div.col-md-8.col-sm-12.col-xs-12
+                    div.col-md-12.col-sm-12.col-xs-12#history-list
+                    div.col-md-12.col-sm-12.col-xs-12
+                        a.btn.btn-primary.btn-block#load-more Load more
+ 
+        include ./template/foot.jade
+        script(src="/javascripts/main.js")
+        script(type="text/javascript").
+            $(document).ready(function() {
+                LoadMoreHistory('#{curDate}', '#{data.current_user.id}');
+            });

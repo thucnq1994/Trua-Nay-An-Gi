@@ -1,0 +1,17 @@
+doctype
+html( lang="en" )
+    include ./template/head.jade
+    body
+        .container
+            include ./template/menu.jade
+            div.row
+                div.col-md-12.col-sm-12.col-xs-12#history-list
+                div.col-md-12.col-sm-12.col-xs-12      
+                    a.btn.btn-primary.btn-block#load-more Load more
+ 
+        include ./template/foot.jade
+        script(src="/javascripts/main.js")
+        script(type="text/javascript").
+            $(document).ready(function() {
+                LoadMoreHistory('#{curDate}');
+            });

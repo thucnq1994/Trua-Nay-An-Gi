@@ -1,0 +1,21 @@
+doctype
+html( lang="en" )
+    include ./template/head.jade
+    body
+        .container
+            include ./template/menu.jade
+            div.page-header
+                h2 Import menu
+            div.row
+                div.col-md-3.col-sm-12
+                div.col-md-6.col-sm-12
+                    h3 Choose your excel file and press Import button
+                    form(action='' method='POST' enctype='multipart/form-data')
+                        input(type='file' name='xlfile')
+                        input.btn.btn-primary.center-block(type='submit' value='Import')
+                    p!=req
+                div.col-md-3.col-sm-12
+ 
+        include ./template/foot.jade
+        
+

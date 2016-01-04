@@ -1,0 +1,33 @@
+doctype
+html( lang="en" )
+	include ./template/head.jade
+	body
+		.container
+			include ./template/menu.jade
+			div.page-header
+				h1.text-center #{dayOfWeek}, #{str_date}
+			div#result
+			div.row
+				div.col-md-12.col-sm-12
+					if menus.length > 0
+						.list-group#menu-list
+							- each menu in menus
+								if currentChoide && currentChoide == menu._id
+									a.list-group-item.active( href="javascript:void(0)" onclick="OrderByDate('#{str_date}', '#{menu._id}');" )
+										h4.list-group-item-heading #{menu.foodName}
+										p.list-group-item-text #{menu.price} VND
+								else
+									a.list-group-item( href="javascript:void(0)" onclick="OrderByDate('#{str_date}', '#{menu._id}');" )
+										h4.list-group-item-heading #{menu.foodName}
+										p.list-group-item-text #{menu.price} VND
+					else
+						h3.text-center Updating! Please come back later!
+
+			div.row
+				div.col-md-6.col-sm-6
+					a.btn.btn-default.btn-lg.btn-block(href='/order/#{priv_date}') Prev day
+				div.col-md-6.col-sm-6
+					a.btn.btn-default.btn-lg.btn-block(href='/order/#{next_date}') Next day
+ 
+		include ./template/foot.jade
+		script(src="/javascripts/main.js")
