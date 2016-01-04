@@ -57,18 +57,13 @@ function loadMoreHistory(req, res){
 									}
 
 									var searchDateLT = new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z");
-									var searchDateGT = new Date(moment(item._id).subtract(1, 'days').format("YYYY-MM-DD") + "T00:00:00.000Z");
-
-									console.log('Ngay thang ben ngoai model: ', curDate.date);
 
 									global.Server.Model.OrderModel
-									.find({ 'actTime' : { $lt : searchDateLT, $gte : searchDateGT } })
+									.find({ 'actTime' : searchDateLT })
 							    .populate('userId menuId')
 							    .exec(
 							    	function(err, orders) {
 							    		
-											console.log('Ben trong model: ', curDate.date);
-
 											orders = orders.sort({'actTime' : -1});
 											curDate.orders = [];
 
