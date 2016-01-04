@@ -20,7 +20,6 @@ function getMenuListByDay(req, res){
 			res.redirect('/order/today');
 		}
 		
-
 		// Get yesterday date to compare with database
 		orderDate = verifyDate.subtract(1, 'days').format("YYYY-MM-DD");
 		orderDate = new Date(orderDate + "T17:00:00.000Z");
@@ -30,6 +29,8 @@ function getMenuListByDay(req, res){
 		global.Server.Model.MenuModel.find({ menuDate : orderDate }, function(err, menus) {
 
 			menus = menus.sort({'foodName' : -1});
+
+			console.log(menus);
 
 			global.Server.Model.OrderModel.findOne({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order) {
 
