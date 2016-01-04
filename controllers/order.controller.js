@@ -120,7 +120,7 @@ function orderFoodByDay(req, res){
 					order.userId = req.currentData.current_user.id;
 					order.menuId = foodId;
 					order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
-					order.actTime = moment(orderDate, "DD/MM/YYYY").toISOString();
+					order.actTime = moment("DD/MM/YYYY").toISOString();
 
 					order.save(function(err) {
 						if(err) { throw err }
