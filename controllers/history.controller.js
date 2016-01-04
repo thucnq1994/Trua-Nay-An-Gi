@@ -56,10 +56,10 @@ function loadMoreHistory(req, res){
 										nextDate = curDate.date;
 									}
 
-									var searchDateLT = new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z");
+									var searchDate = new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z");
 
 									global.Server.Model.OrderModel
-									.find({ 'actTime' : searchDateLT })
+									.find({ actTime : searchDate })
 							    .populate('userId menuId')
 							    .exec(
 							    	function(err, orders) {
