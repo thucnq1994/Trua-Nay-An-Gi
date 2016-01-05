@@ -24,7 +24,7 @@ function LoadMoreHistory(curDate, curUserId){
 				html += '<div class="panel panel-primary"><div class="panel-heading">'+history.date+'</div><div class="panel-body">';
 				history.orders.forEach(function(order){
 					html += '<p>';
-					html += order.actTime + ' - <b>' + order.username + '</b> had ordered <b>' + order.foodName + '</b> for lunch at ' + order.orderDate + '.';
+					html += '<b>' + order.username + '</b> had ordered <b>' + order.foodName + '</b> for lunch at ' + order.orderDate + '.';
 					html += '</p>';
 				});
 				html += '</div></div>';
