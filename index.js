@@ -71,13 +71,7 @@ app.get('/history', mwSession.getSessionData, function (req, res){
 });
 app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
 app.get('/test', mwSession.getSessionData,function (req, res){
-	var x = new Date('2015-12-16');
-	var y = new Date('2015-12-15');
-	if(x.getTime() > y.getTime()){
-		console.log('x > y');
-	} else {
-		console.log('x < y');
-	}
+	console.log(moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString());
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){

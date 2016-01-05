@@ -117,17 +117,17 @@ function orderFoodByDay(req, res){
 			  	} else {
 			  		// Order at first time, create new order
 		  			var order = new global.Server.Model.OrderModel;
-					order.userId = req.currentData.current_user.id;
-					order.menuId = foodId;
-					order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
-					order.actTime = moment("DD/MM/YYYY").toISOString();
+						order.userId = req.currentData.current_user.id;
+						order.menuId = foodId;
+						order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
+						order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
 
-					order.save(function(err) {
-						if(err) { throw err }
-						data = { content : 'Ordered successfully!', type : 'success' };
-						res.send(JSON.stringify(data));
-						return;
-					});
+						order.save(function(err) {
+							if(err) { throw err }
+							data = { content : 'Ordered successfully!', type : 'success' };
+							res.send(JSON.stringify(data));
+							return;
+						});
 			  	}
 			  
 		  	});
