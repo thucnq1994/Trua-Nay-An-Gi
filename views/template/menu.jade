@@ -20,7 +20,8 @@ nav.navbar.navbar-default( role="navigation" )
                     a.dropdown-toggle( href="#", data-toggle="dropdown", role="button", aria-expanded="false" ) Admincp 
                         span.caret
                     ul.dropdown-menu( role="menu" )
-                        li: a( href="/import" ) Import menu
+                        li: a( href="/admincp/menu-importer" ) Import menu
+                        li: a( href="/admincp/menu-manager" ) Menu manager
         ul.nav.navbar-nav.navbar-right
             li.dropdown
                 if data.current_user

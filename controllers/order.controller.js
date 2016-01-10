@@ -24,12 +24,9 @@ function getMenuListByDay(req, res){
 
 		var currentChoide = null;
 
-		global.Server.Model.MenuModel.find({ menuDate : orderDate }, function(err, menus) {
+		getMenuByDate({ menuDate : orderDate }, function(err, menus){
 
-			menus = menus.sort({'foodName' : -1});
-
-			global.Server.Model.OrderModel.findOne({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order) {
-
+			getCurrentOrderFood({orderDate : orderDate, userId : req.currentData.current_user.id}, function(err, order){
 				if(order) {
 					currentChoide = order.menuId;
 				}
@@ -66,6 +63,62 @@ function getMenuListByDay(req, res){
 	}
 }
 
+function getMenuByDate( param, cb){
+	global.Server.Model.MenuModel.find(param, function(err, menus) {
+
+		if (err) {
+			return cb && cb(err);
+		}
+
+		menus = menus.sort({'foodName' : -1});
+
+		return cb && cb(null, menus);
+	});
+}
+
+function getCurrentOrderFood( param, cb){
+	global.Server.Model.OrderModel.findOne( param, function(err, order) {
+
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null, order);
+	});
+}
+
+function getFoodById(param, cb){
+	global.Server.Model.MenuModel.findOne( param , function(err, food) {
+
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null, food);
+
+	});
+}
+
+function removeOrder(param, cb){
+	global.Server.Model.OrderModel.find( param ).remove( function(err){
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null);
+	});
+}
+
+function updateOrder(param, set, cb){
+	global.Server.Model.OrderModel.update(param, { $set: set }, function(err){
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null);
+	});
+}
+
 function orderFoodByDay(req, res){
 	var data = {};
 	var foodId = req.body.foodId;
@@ -87,58 +140,45 @@ function orderFoodByDay(req, res){
 		return;
 	}
 
-	global.Server.Model.MenuModel.findOne({_id : foodId}, function(err, data) {
-
-	  	if(!data) {
-	  		data = { content : 'Menu: Food does not exist!', type : 'danger' };
-	  		res.send(JSON.stringify(data));
+	getFoodById({_id : foodId}, function(err, food){
+		if(!food) {
+  		res.send(JSON.stringify({ content : 'Menu: Food does not exist!', type : 'danger' }));
 			return;
-	  	} else {
-	  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-				searchDate = new Date(searchDate + "T00:00:00.000Z");
-				global.Server.Model.OrderModel.findOne({orderDate : searchDate}, function(err, data) {
+  	} else {
+  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
+			searchDate = new Date(searchDate + "T00:00:00.000Z");
+			getCurrentOrderFood({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order){
+				if(order) {
+		  		if(order.menuId === foodId) {
+		  			removeOrder({ _id : data._id }, function(err){
+		  				res.send(JSON.stringify({ content : 'Deleted order successfully!', type : 'success' }));
+		  				return;
+		  			});
+		  		} else {
+		  			// ReOrder, update current order
+			  		updateOrder({ _id: data._id }, { menuId : foodId }, function(err){
+				  		res.send(JSON.stringify({ content : 'ReOrdered successfully!', type : 'success' }));
+				  		return;
+			  		});
+		  		}
+		  	} else {
+		  		// Order at first time, create new order
+	  			var order = new global.Server.Model.OrderModel;
+					order.userId = req.currentData.current_user.id;
+					order.menuId = foodId;
+					order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
+					order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
 
-			  	if(data) {
-			  		//if update order equal current order, delete it
-			  		if(data.menuId === foodId) {
-			  			global.Server.Model.OrderModel.find({ _id : data._id }).remove( function(err){
-			  				data = { content : 'Deleted order successfully!', type : 'success' };
-					  		res.send(JSON.stringify(data));
-							return;
-			  			});
-			  		} else {
-			  			// ReOrder, update current order
-				  		global.Server.Model.OrderModel.update({ _id: data._id }, { $set: { menuId : foodId }}, function(err){
-			  				data = { content : 'ReOrdered successfully!', type : 'success' };
-					  		res.send(JSON.stringify(data));
-							return;
-				  		});
-			  		}
-			  	} else {
-			  		// Order at first time, create new order
-		  			var order = new global.Server.Model.OrderModel;
-						order.userId = req.currentData.current_user.id;
-						order.menuId = foodId;
-						order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
-						order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
-
-						order.save(function(err) {
-							if(err) { throw err }
-							data = { content : 'Ordered successfully!', type : 'success' };
-							res.send(JSON.stringify(data));
-							return;
-						});
-			  	}
-			  
-		  	});
-	  	}
-  	});
-}
-
-function foodIdExist(foodId, cb){
-	
+					order.save(function(err) {
+						if(err) { throw err }
+						res.send(JSON.stringify({ content : 'Ordered successfully!', type : 'success' }));
+						return;
+					});
+		  	}
+			});
+  	}
+	});
 }
 
 module.exports.getMenuListByDay = getMenuListByDay;
 module.exports.orderFoodByDay = orderFoodByDay;
-module.exports.foodIdExist = foodIdExist;

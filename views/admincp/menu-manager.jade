@@ -1,0 +1,25 @@
+doctype
+html( lang="en" )
+    include ../template/head.jade
+    body
+        .container
+            include ../template/menu.jade
+            div.container
+                h2 Menu manager
+                p #{dayOfWeek}, #{str_date}
+                table.table.table-striped.table-bordered
+                    thead
+                        tr
+                            th Name
+                            th Price
+                            th Action
+                    tbody 
+                        - each menu in menus
+                            tr
+                                td #{menu.foodName}
+                                td #{menu.price}
+                                td
+                                    a.btn.btn-primary(href="/admincp/menu-manager/edit/#{menu._id}") Edit
+                                    a.btn.btn-danger(href="javasript:void(0)") Delete
+ 
+        include ../template/foot.jade

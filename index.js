@@ -20,6 +20,8 @@ var cProfile			= require(__dirname + '/controllers/profile.controller');
 var cOrder				= require(__dirname + '/controllers/order.controller');
 var cHistory			= require(__dirname + '/controllers/history.controller');
 
+var cMenuManager	= require(__dirname + '/controllers/admincp/menu-manager.controller.js');
+
 
 // Autoload Models
 global.Server			= { Model : {} };
@@ -58,8 +60,6 @@ app.get('/', mwSession.getSessionData, function(req, res){
 app.get('/login', cAuth.login);
 app.get('/logout', cAuth.logout);
 app.get('/gglogin', cAuth.gglogin);
-app.get('/import', mwSession.getSessionData, cImport.getImport);
-app.post('/import', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
 app.get('/profile', mwSession.getSessionData, cProfile);
 app.get('/order/:date', mwSession.getSessionData, cOrder.getMenuListByDay);
 app.post('/order', mwSession.getSessionData, cOrder.orderFoodByDay);
@@ -70,8 +70,14 @@ app.get('/history', mwSession.getSessionData, function (req, res){
 	res.render('history', { data : req.currentData, curDate : moment().add(1, 'days').format("DD/MM/YYYY") });
 });
 app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
+
+
+app.get('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
+app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
+app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
+
 app.get('/test', mwSession.getSessionData,function (req, res){
-	console.log(moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString());
+	res.render('admincp/menu', { data : req.currentData });
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){
