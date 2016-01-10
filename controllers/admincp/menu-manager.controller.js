@@ -5,7 +5,7 @@ function getMenuListByDay(req, res){
 	var sess = req.session;
 	if (sess.current_user) {
 
-		var date = req.params.date;
+		var date = req.body.date;
 		var orderDate, verifyDate;
 		if(date == null) {
 			verifyDate = moment();
