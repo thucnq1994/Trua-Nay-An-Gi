@@ -53,7 +53,7 @@ function getMenuByDate( param, cb){
 	});
 }
 
-function getMenuById(param, cb){
+function _getMenuById(param, cb){
 	global.Server.Model.MenuModel.findOne(param, function(err, menu) {
 
 		if (err) {
@@ -75,7 +75,7 @@ function deleteMenuById(req, res){
 			res.redirect('/admincp/menu-manager');
 		}
 
-		getMenuById({ _id : menu_id }, function(err, menu){
+		_getMenuById({ _id : menu_id }, function(err, menu){
 
 			if(!menu){
 				sess.message = { content : 'Menu does not exist', type : 'danger' };
@@ -95,10 +95,42 @@ function deleteMenuById(req, res){
 	}
 }
 
+function getMenuById(req, res){
+	var sess = req.session;
+	if (sess.current_user && sess.current_user.group == 1) {
+
+		var menu_id = req.params.id;
+
+		if( !isNaN(parseFloat(menu_id)) && isFinite(menu_id) ) {
+			sess.message = { content : 'Wrong menu id format', type : 'danger' };
+			res.redirect('/admincp/menu-manager');
+		}
+
+		_getMenuById({ _id : menu_id }, function(err, menu){
+
+			if(!menu){
+				sess.message = { content : 'Menu does not exist', type : 'danger' };
+				res.redirect('/admincp/menu-manager');
+			}
+
+			res.render('admincp/menu-manager-edit', { 
+									data : req.currentData,
+									menu : menu
+								});
+
+		});
+
+	} else {
+		sess.message = { content : 'You must login to access this area!', type : 'danger' };
+		res.redirect('/');
+	}
+}
+
 function editMenuById(req, res){
 
 }
 
 module.exports.getMenuListByDay = getMenuListByDay;
 module.exports.deleteMenuById = deleteMenuById;
+module.exports.getMenuById = getMenuById;
 module.exports.editMenuById = editMenuById;

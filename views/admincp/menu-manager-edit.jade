@@ -1,0 +1,34 @@
+doctype
+html( lang="en" )
+    include ../template/head.jade
+    link(rel='stylesheet', href='/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')
+    body
+        .container
+            include ../template/menu.jade
+            div.container
+                form.form-horizontal(method="post" role="form" action="")
+                    h2.page-header Edit menu
+                    div.form-group
+                        label.col-sm-3.control-label(for="name") Name
+                        div.col-sm-6
+                            input.form-control(type="text" name="name" value="#{menu.foodName}")
+                    div.form-group
+                        label.col-sm-3.control-label(for="price") Price
+                        div.col-sm-6
+                            input.form-control(type="text" name="price" value="#{menu.price}")
+                    div.form-group
+                        label.col-sm-3.control-label(for="menuDate") Date
+                        div.col-sm-6
+                            input.form-control.datepicker(type="text" name="menuDate" value="#{menu.menuDate}")
+                    div.form-group.text-center
+                        button.btn.btn-primary(type="submit") Save
+
+        include ../template/foot.jade
+        script(src="/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+        script(type="text/javascript").
+            $(document).ready(function() {
+                $('.datepicker').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
+            });

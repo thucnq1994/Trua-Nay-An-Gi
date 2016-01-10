@@ -74,13 +74,14 @@ app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
 
 app.get('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
 app.get('/admincp/menu-manager/delete/:id', mwSession.getSessionData, cMenuManager.deleteMenuById);
-app.get('/admincp/menu-manager/edit/:id', mwSession.getSessionData, cMenuManager.editMenuById);
+app.get('/admincp/menu-manager/edit/:id', mwSession.getSessionData, cMenuManager.getMenuById);
+app.post('/admincp/menu-manager/edit/:id', mwSession.getSessionData, cMenuManager.editMenuById);
 app.post('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
 app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
 app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
 
 app.get('/test', mwSession.getSessionData,function (req, res){
-	res.render('admincp/menu', { data : req.currentData });
+	res.render('admincp/menu-manager-edit', { data : req.currentData });
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){
