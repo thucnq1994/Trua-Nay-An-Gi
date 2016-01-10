@@ -115,7 +115,12 @@ function getMenuById(req, res){
 
 			res.render('admincp/menu-manager-edit', { 
 									data : req.currentData,
-									menu : menu
+									menu : {
+												_id : menu._id,
+												price : menu.price,
+												foodName : menu.foodName,
+												menuDate : moment(menu.menuDate).format("DD/MM/YYYY")
+											}
 								});
 
 		});
@@ -127,7 +132,40 @@ function getMenuById(req, res){
 }
 
 function editMenuById(req, res){
+	var sess = req.session;
+	if (sess.current_user && sess.current_user.group == 1) {
 
+		var menu_id = req.params.id;
+		var menu_foodName = req.body.foodName;
+		var menu_price = req.body.price;
+		var menu_menuDate = req.body.menuDate;
+
+		if( !isNaN(parseFloat(menu_price)) && isFinite(menu_price) ) {
+			sess.message = { content : 'Wrong price format', type : 'danger' };
+			res.redirect('/admincp/menu-manager/edit/' + menu_id);
+		}
+
+		_getMenuById({ _id : menu_id }, function(err, menu){
+
+			if(!menu){
+				sess.message = { content : 'Menu does not exist', type : 'danger' };
+				res.redirect('/admincp/menu-manager');
+			}
+
+			menu.foodName = menu_foodName;
+			menu.price = menu_price;
+			menu.menuDate = menu_menuDate;
+			menu.save(function(){
+				sess.message = { content : 'The menu was updated', type : 'success' };
+				res.redirect('/admincp/menu-manager');
+			});
+
+		});
+
+	} else {
+		sess.message = { content : 'You must login to access this area!', type : 'danger' };
+		res.redirect('/');
+	}
 }
 
 module.exports.getMenuListByDay = getMenuListByDay;
