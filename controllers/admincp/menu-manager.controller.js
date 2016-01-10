@@ -138,7 +138,7 @@ function editMenuById(req, res){
 		var menu_id = req.params.id;
 		var menu_foodName = req.body.foodName;
 		var menu_price = req.body.price;
-		var menu_menuDate = req.body.menuDate;
+		var menu_menuDate = moment(req.body.menuDate, "DD/MM/YYYY");
 
 		if( !isNaN(parseFloat(menu_price)) && isFinite(menu_price) ) {
 			sess.message = { content : 'Wrong price format', type : 'danger' };
