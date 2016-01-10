@@ -1,12 +1,21 @@
 doctype
 html( lang="en" )
     include ../template/head.jade
+    link(rel='stylesheet', href='/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')
     body
         .container
             include ../template/menu.jade
             div.container
                 h2 Menu manager
                 p #{dayOfWeek}, #{str_date}
+                div.panel.panel-default
+                    div.panel-heading Filter
+                    div.panel-body
+                        form.form-horizontal(role="form" method="post" action="" )
+                            div.form-group.col-md-4
+                                input.form-control.datepicker(type="text" name="date" value="#{str_date}")
+                            div.form-group.col-md-2
+                                button.btn.btn-primary(type="submmit") OK
                 table.table.table-striped.table-bordered
                     thead
                         tr
@@ -23,3 +32,12 @@ html( lang="en" )
                                     a.btn.btn-danger(href="javasript:void(0)") Delete
  
         include ../template/foot.jade
+        script(src="/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+        script(type="text/javascript").
+            $(document).ready(function() {
+                $('.datepicker').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true
+                });
+
+            });

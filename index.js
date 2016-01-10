@@ -73,6 +73,7 @@ app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
 
 
 app.get('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
+app.post('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
 app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
 app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
 
