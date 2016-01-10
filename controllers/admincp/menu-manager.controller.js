@@ -35,7 +35,7 @@ function getMenuListByDay(req, res){
 		});
 
 	} else {
-		sess.message = { content : 'You must login to order!', type : 'danger' };
+		sess.message = { content : 'You must login to access to this area!', type : 'danger' };
 		res.redirect('/');
 	}
 }
@@ -53,4 +53,52 @@ function getMenuByDate( param, cb){
 	});
 }
 
+function getMenuById(param, cb){
+	global.Server.Model.MenuModel.findOne(param, function(err, menu) {
+
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null, menu);
+	});
+}
+
+function deleteMenuById(req, res){
+	var sess = req.session;
+	if (sess.current_user && sess.current_user.group == 1) {
+
+		var menu_id = req.params.id;
+
+		if( !isNaN(parseFloat(menu_id)) && isFinite(menu_id) ) {
+			sess.message = { content : 'Wrong menu id format', type : 'danger' };
+			res.redirect('/admincp/menu-manager');
+		}
+
+		getMenuById({ _id : menu_id }, function(err, menu){
+
+			if(!menu){
+				sess.message = { content : 'Menu does not exist', type : 'danger' };
+				res.redirect('/admincp/menu-manager');
+			}
+
+			menu.remove(function(){
+				sess.message = { content : 'The menu was deleted', type : 'success' };
+				res.redirect('/admincp/menu-manager');
+			});
+
+		});
+
+	} else {
+		sess.message = { content : 'You must login to access this area!', type : 'danger' };
+		res.redirect('/');
+	}
+}
+
+function editMenuById(req, res){
+
+}
+
 module.exports.getMenuListByDay = getMenuListByDay;
+module.exports.deleteMenuById = deleteMenuById;
+module.exports.editMenuById = editMenuById;

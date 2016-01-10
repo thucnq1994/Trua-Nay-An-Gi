@@ -73,6 +73,8 @@ app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
 
 
 app.get('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
+app.get('/admincp/menu-manager/delete/:id', mwSession.getSessionData, cMenuManager.deleteMenuById);
+app.get('/admincp/menu-manager/edit/:id', mwSession.getSessionData, cMenuManager.editMenuById);
 app.post('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
 app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
 app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
