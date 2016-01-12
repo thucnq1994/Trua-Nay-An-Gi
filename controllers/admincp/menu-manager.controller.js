@@ -152,6 +152,9 @@ function editMenuById(req, res){
 						throw err;
 					}
 
+					sess.message = { content : 'The menu was updated', type : 'success' };
+					res.redirect('/admincp/menu-manager/edit/' + menu_id);
+
 				}
 			);
 		} else {

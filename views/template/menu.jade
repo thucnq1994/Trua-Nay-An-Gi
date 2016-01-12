@@ -36,6 +36,6 @@ nav.navbar.navbar-default( role="navigation" )
                 else
                     a( href="/login" ) Sign in / Sign up 
 if data.message && data.message.content
-        div(class="alert alert-dismissable alert-#{ data.message.type }")
+        div(class="alert alert-dismissable alert-#{ data.message.type }")#message
             button.close(data-dismiss="alert" type="button") × 
             !=data.message.content
