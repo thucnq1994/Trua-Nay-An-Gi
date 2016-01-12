@@ -81,7 +81,13 @@ app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
 app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
 
 app.get('/test', mwSession.getSessionData,function (req, res){
-	res.render('admincp/menu-manager-edit', { data : req.currentData });
+	var menu_price = 'a';
+	if( !isNaN(parseFloat(menu_price)) && isFinite(menu_price) ) {
+		console.log('ko phai so');
+	} else {
+		console.log('La so');
+	}
+
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){

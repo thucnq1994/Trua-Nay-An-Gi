@@ -101,11 +101,6 @@ function getMenuById(req, res){
 
 		var menu_id = req.params.id;
 
-		if( !isNaN(parseFloat(menu_id)) && isFinite(menu_id) ) {
-			sess.message = { content : 'Wrong menu id format', type : 'danger' };
-			res.redirect('/admincp/menu-manager');
-		}
-
 		_getMenuById({ _id : menu_id }, function(err, menu){
 
 			if(!menu){
@@ -141,26 +136,28 @@ function editMenuById(req, res){
 		var menu_menuDate = moment(req.body.menuDate, "DD/MM/YYYY");
 
 		if( !isNaN(parseFloat(menu_price)) && isFinite(menu_price) ) {
+				
+			global.Server.Model.MenuModel.update(
+				{ _id : menu_id },
+				{
+					$set : {
+								foodName : menu_foodName, 
+								price : menu_price, 
+								menuDate : menu_menuDate
+							}
+				},
+				function(err){
+
+					if(err){
+						throw err;
+					}
+
+				}
+			);
+		} else {
 			sess.message = { content : 'Wrong price format', type : 'danger' };
 			res.redirect('/admincp/menu-manager/edit/' + menu_id);
 		}
-
-		_getMenuById({ _id : menu_id }, function(err, menu){
-
-			if(!menu){
-				sess.message = { content : 'Menu does not exist', type : 'danger' };
-				res.redirect('/admincp/menu-manager');
-			}
-
-			menu.foodName = menu_foodName;
-			menu.price = menu_price;
-			menu.menuDate = menu_menuDate;
-			menu.save(function(){
-				sess.message = { content : 'The menu was updated', type : 'success' };
-				res.redirect('/admincp/menu-manager');
-			});
-
-		});
 
 	} else {
 		sess.message = { content : 'You must login to access this area!', type : 'danger' };
