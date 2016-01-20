@@ -5,6 +5,9 @@ function loadMoreHistory(req, res){
 	var data = {};
 	var currentDate = req.body.curDate;
 	var curUserId = req.body.curUserId;
+	if(!currentDate){
+		currentDate = moment().format("DD/MM/YYYY");
+	}
 	if(!curUserId){
 		curUserId = '';
 	}
@@ -32,7 +35,7 @@ function loadMoreHistory(req, res){
   		{ $match : { actTime: { $lt: searchDate }, userId : new RegExp('^' + curUserId, "i") } },
       { $group : { _id : "$actTime" } },
       { $sort : { _id : -1 } },
-      { $limit : 10 }
+      { $limit : 1 }
     ])
     .exec(
 	    function(err,data) {
@@ -56,10 +59,8 @@ function loadMoreHistory(req, res){
 										nextDate = curDate.date;
 									}
 
-									var searchDate = new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z");
-
 									global.Server.Model.OrderModel
-									.find({ actTime : searchDate })
+									.find({ actTime : new Date(moment(item._id).format("YYYY-MM-DD") + "T00:00:00.000Z") })
 							    .populate('userId menuId')
 							    .exec(
 							    	function(err, orders) {
@@ -95,25 +96,6 @@ function loadMoreHistory(req, res){
 					    });
 						},
 						function(err){
-							/*
-							async.series([
-								function(callback) {
-									ret.forEach(function(history){
-										ret.forEach(function(h){
-											if(moment(history.date, "DD/MM/YYYY").isBefore(moment(h.date, "DD/MM/YYYY"))) {
-												var temp = history;
-												history = h;
-												h = temp;
-											}
-										});
-									});
-									callback();
-								}
-							], function(err) { //This function gets called after the two tasks have called their "task callbacks"
-					        if (err) return next(err);
-					        res.send(JSON.stringify({ content : 'Success!', type : 'success', data : ret, nextDate : moment(nextDate, "DD/MM/YYYY").subtract(1, 'days').format("DD-MM-YYYY") }));
-					    });
-							*/
 				  		res.send(JSON.stringify({ content : 'Success!', type : 'success', data : ret, nextDate : moment(nextDate, "DD/MM/YYYY").subtract(1, 'days').format("DD-MM-YYYY") }));
 				  		return;
 						}
@@ -123,4 +105,9 @@ function loadMoreHistory(req, res){
   	);
 }
 
+function viewHistory(req, res){
+	res.render('history', { data : req.currentData, curDate : moment().add(1, 'days').format("DD/MM/YYYY") });
+}
+
 module.exports.loadMoreHistory = loadMoreHistory;
+module.exports.viewHistory = viewHistory;

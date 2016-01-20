@@ -66,9 +66,7 @@ app.post('/order', mwSession.getSessionData, cOrder.orderFoodByDay);
 app.get('/about', mwSession.getSessionData, function (req, res){
 	res.render('about', { data : req.currentData });
 });
-app.get('/history', mwSession.getSessionData, function (req, res){
-	res.render('history', { data : req.currentData, curDate : moment().add(1, 'days').format("DD/MM/YYYY") });
-});
+app.get('/history', mwSession.getSessionData, cHistory.viewHistory);
 app.post('/history', mwSession.getSessionData, cHistory.loadMoreHistory);
 
 
