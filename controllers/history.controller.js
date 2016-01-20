@@ -77,7 +77,7 @@ function loadMoreHistory(req, res){
 													reformat.userId = order.userId;
 													reformat.username = order.userId.username;
 													reformat.menuId = order.menuId;
-													reformat.foodName = "test";//order.menuId.foodName;
+													reformat.foodName = order.menuId.foodName;
 													curDate.orders.push(reformat);
 													callback_each_order();
 												},
