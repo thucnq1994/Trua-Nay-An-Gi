@@ -20,7 +20,7 @@ function postImport(req, res){
 			arr.forEach(function(menuByDay) {
 				menuByDay.foodList.forEach(function(foodList) {
 					var menu = new global.Server.Model.MenuModel;
-					menu.menuDate = moment(menuByDay.date, "DD/MM/YY").toISOString();
+					menu.menuDate = moment(menuByDay.date, "DD/MM/YYYY").toISOString();
 					menu.foodName = foodList.name;
 					menu.price = foodList.price;
 					menu.creator = sess.current_user.id;
@@ -33,7 +33,7 @@ function postImport(req, res){
 			});
 
 			sess.message = { content : 'Imported successfully!', type : 'success' };
-			res.redirect('/import');
+			res.redirect('/admincp/menu-importer');
 		});
 	} else {
 		sess.message = { content : 'You must login to access this area!', type : 'danger' };
