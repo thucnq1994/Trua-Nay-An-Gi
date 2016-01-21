@@ -6,7 +6,8 @@ module.exports = function (mongoose) {
 		username : {type : String, required : true, unique : true },
 		email : {type : String, required : true, unique : true },
 		group : { type: Number, default: 2 },
-		money : { type: Number, default: 0 }
+		money : { type: Number, default: 0 },
+		status : {type : Number, default: 1 }
 	});
 
 	return mongoose.model('User', UserSchema);

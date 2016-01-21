@@ -31,6 +31,12 @@ html( lang="en" )
                                 option(value="1" selected=user.group == 1) Administrator
                                 option(value="2" selected=user.group == 2) User
                     div.form-group
+                        label.col-sm-3.control-label(for="status") Status
+                        div.col-sm-6
+                            select.form-control(name="status")
+                                option(value="1" selected=user.status == 1) Active
+                                option(value="0" selected=user.status == 0) Inactive
+                    div.form-group
                         label.col-sm-3.control-label(for="money") Balance
                         div.col-sm-6
                             input.form-control.datepicker(type="number" name="money" value="#{user.money}")

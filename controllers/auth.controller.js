@@ -37,15 +37,20 @@ function gglogin(req, res){
 	    	global.Server.Model.UserModel.findOne({ gg_id : profile.id }, function(err, data) {
 
         	if(data) {
-						sess.current_user = {
-																	id: data._id,
-																	group: data.group,
-																	displayName: data.username,
-																	avatar: profile.image.url,
-																	email: profile.emails[0].value
-															 	};
-						sess.message = { content : 'You have logged in successfully!', type : 'success' };
-					 	res.redirect('/');
+        		if(data.status === 0) {
+        			sess.message = { content : 'You was banned! Please contact to administrator for more infomation!', type : 'danger' };
+						 	res.redirect('/');
+        		} else {
+        			sess.current_user = {
+																		id: data._id,
+																		group: data.group,
+																		displayName: data.username,
+																		avatar: profile.image.url,
+																		email: profile.emails[0].value
+																 	};
+							sess.message = { content : 'You have logged in successfully!', type : 'success' };
+						 	res.redirect('/');
+						 }
 
         	} else {
 
@@ -55,6 +60,7 @@ function gglogin(req, res){
 						user.email = profile.emails[0].value;
 						user.group = 1;
 						user.money = 0;
+						user.status = 1;
 
 		    		user.save(function(err, obj) {
 		        	if(!err) {

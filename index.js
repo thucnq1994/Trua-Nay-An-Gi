@@ -87,7 +87,7 @@ app.get('/admincp/user-manager/edit/:id', mwSession.getSessionData, cUserManager
 app.post('/admincp/user-manager/edit/:id', mwSession.getSessionData, cUserManager.editUserById);
 
 app.get('/test', mwSession.getSessionData,function (req, res){
-
+	
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){

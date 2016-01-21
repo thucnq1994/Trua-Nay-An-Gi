@@ -83,7 +83,28 @@ function getCurrentOrderFood( param, cb){
 			return cb && cb(err);
 		}
 
-		return cb && cb(null, order);
+		if(order) {
+			global.Server.Model.MenuModel.findOne( {_id : order.menuId}, function(err, menu) {
+				if (err) {
+					return cb && cb(err);
+				}
+				var ret_order = {
+									_id : order._id,
+									actTime : order.actTime,
+									orderDate : order.orderDate,
+									menuId : order.menuId,
+									userId : order.userId,
+									menuPrice : menu.price
+								};
+				return cb && cb(null, ret_order);
+			});
+		} else {
+			if (err) {
+				return cb && cb(err);
+			}
+			return cb && cb(null, order);
+		}
+
 	});
 }
 
@@ -119,6 +140,16 @@ function updateOrder(param, set, cb){
 	});
 }
 
+function modifyMoney(user_id, amount, cb){
+	global.Server.Model.UserModel.findByIdAndUpdate({_id : user_id}, {$inc: {money:amount}}, function(err){
+		if (err) {
+			return cb && cb(err);
+		}
+
+		return cb && cb(null);
+	});
+}
+
 function orderFoodByDay(req, res){
 	var data = {};
 	var foodId = req.body.foodId;
@@ -146,36 +177,50 @@ function orderFoodByDay(req, res){
 			return;
   	} else {
   		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-			searchDate = new Date(searchDate + "T00:00:00.000Z");
-			getCurrentOrderFood({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order){
-				if(order) {
+		searchDate = new Date(searchDate + "T00:00:00.000Z");
+		getCurrentOrderFood({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order){
+			if(order) {
 		  		if(order.menuId === foodId) {
-		  			removeOrder({ _id : data._id }, function(err){
-		  				res.send(JSON.stringify({ content : 'Deleted order successfully!', type : 'success' }));
-		  				return;
+	  				modifyMoney(req.currentData.current_user.id, food.price, function(err){
+	  					if(err) { throw err }
+			  			removeOrder({ _id : data._id }, function(err){
+			  				res.send(JSON.stringify({ content : 'Deleted order successfully!', type : 'success' }));
+			  				return;
+			  			});
 		  			});
 		  		} else {
 		  			// ReOrder, update current order
-			  		updateOrder({ _id: data._id }, { menuId : foodId }, function(err){
-				  		res.send(JSON.stringify({ content : 'ReOrdered successfully!', type : 'success' }));
-				  		return;
-			  		});
+		  			modifyMoney(req.currentData.current_user.id, order.menuPrice, function(err){
+		  				if(err) { throw err }
+	  					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
+		  					if(err) { throw err }
+		  					updateOrder({ _id: data._id }, { menuId : foodId }, function(err){
+						  		res.send(JSON.stringify({ content : 'ReOrdered successfully!', type : 'success' }));
+						  		return;
+					  		});
+		  				});
+	  				});
+
 		  		}
 		  	} else {
 		  		// Order at first time, create new order
-	  			var order = new global.Server.Model.OrderModel;
+				modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
+					if(err) { throw err }
+
+					var order = new global.Server.Model.OrderModel;
 					order.userId = req.currentData.current_user.id;
 					order.menuId = foodId;
 					order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
 					order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
-
 					order.save(function(err) {
 						if(err) { throw err }
 						res.send(JSON.stringify({ content : 'Ordered successfully!', type : 'success' }));
 						return;
 					});
+				});
+					
 		  	}
-			});
+		});
   	}
 	});
 }

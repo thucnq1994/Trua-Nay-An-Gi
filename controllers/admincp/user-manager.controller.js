@@ -50,7 +50,8 @@ function getUserById(req, res){
 														username : user.username,
 														email : user.email,
 														gg_id : user.gg_id,
-														money : user.money
+														money : user.money,
+														status : user.status
 													}
 								});
 
@@ -69,15 +70,17 @@ function editUserById(req, res){
 		var user_id = req.params.id;
 		var group = req.body.group;
 		var money = req.body.money;
+		var status = req.body.status;
 
-		if( !isNaN(parseFloat(group)) && isFinite(group) || !isNaN(parseFloat(money)) && isFinite(money)) {
+		if( !isNaN(parseFloat(group)) && isFinite(group) || !isNaN(parseFloat(money)) && isFinite(money) || !isNaN(parseFloat(status)) && isFinite(status)) {
 				
 			global.Server.Model.UserModel.update(
 				{ _id : user_id },
 				{
 					$set : {
 								group : group, 
-								money : money
+								money : money,
+								status : status
 							}
 				},
 				function(err){
@@ -92,7 +95,7 @@ function editUserById(req, res){
 				}
 			);
 		} else {
-			sess.message = { content : 'Wrong balance or group format', type : 'danger' };
+			sess.message = { content : 'Wrong balance, group or status format', type : 'danger' };
 			res.redirect('/admincp/user-manager/edit/' + user_id);
 		}
 
