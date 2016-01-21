@@ -1,0 +1,42 @@
+doctype
+html( lang="en" )
+    include ../template/head.jade
+    link(rel='stylesheet', href='/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')
+    body
+        .container
+            include ../template/menu.jade
+            div.container
+                h2 User manager
+                div.row
+                    div.col-md-4
+                        div.panel.panel-default
+                            div.panel-heading Filter
+                            div.panel-body
+                                form.form-horizontal(role="form" method="post" action="" )
+                                    div.input-group
+                                        input.form-control.datepicker(type="text" name="keyword" placeholder="Username, email, ..." value="#{keyword}")
+                                        span.input-group-btn
+                                            button.btn.btn-primary(type="submmit") OK
+                    div.col-md-8
+                        div.panel.panel-default
+                            div.panel-heading
+                                h3.panel-title User list
+                            div.panel-body
+                                table.table.table-striped.table-bordered
+                                    thead
+                                        tr
+                                            th Name
+                                            th Balance
+                                            th Action
+                                    tbody
+                                        if userList && userList.length > 0
+                                            - each user in userList
+                                                tr
+                                                    td #{user.username}
+                                                    td #{user.money}
+                                                    td
+                                                        a.btn.btn-primary(href="/admincp/user-manager/edit/#{user._id}") Edit
+                                        else
+                                            tr
+                                                td.text-center(colspan="3") No record is found.
+        include ../template/foot.jade

@@ -15,12 +15,14 @@ var mwSession			= require(__dirname + '/middlewares/session');
 
 //Controllers
 var cAuth					= require(__dirname + '/controllers/auth.controller');
-var cImport				= require(__dirname + '/controllers/import.controller');
 var cProfile			= require(__dirname + '/controllers/profile.controller');
 var cOrder				= require(__dirname + '/controllers/order.controller');
 var cHistory			= require(__dirname + '/controllers/history.controller');
 
+var cImport				= require(__dirname + '/controllers/import.controller');
 var cMenuManager	= require(__dirname + '/controllers/admincp/menu-manager.controller.js');
+var cStatisticsByDay = require(__dirname + '/controllers/admincp/statistics-by-day.controller.js');
+var cUserManager	= require(__dirname + '/controllers/admincp/user-manager.controller.js');
 
 
 // Autoload Models
@@ -77,9 +79,15 @@ app.post('/admincp/menu-manager/edit/:id', mwSession.getSessionData, cMenuManage
 app.post('/admincp/menu-manager', mwSession.getSessionData, cMenuManager.getMenuListByDay);
 app.get('/admincp/menu-importer', mwSession.getSessionData, cImport.getImport);
 app.post('/admincp/menu-importer', mwSession.getSessionData, upload.single('xlfile'), cImport.postImport);
+app.get('/admincp/statistics-by-day', mwSession.getSessionData, cStatisticsByDay.getStatisticsByDay);
+app.post('/admincp/statistics-by-day', mwSession.getSessionData, cStatisticsByDay.getStatisticsByDay);
+app.get('/admincp/user-manager', mwSession.getSessionData, cUserManager.getUser);
+app.post('/admincp/user-manager', mwSession.getSessionData, cUserManager.getUser);
+app.get('/admincp/user-manager/edit/:id', mwSession.getSessionData, cUserManager.getUserById);
+app.post('/admincp/user-manager/edit/:id', mwSession.getSessionData, cUserManager.editUserById);
 
 app.get('/test', mwSession.getSessionData,function (req, res){
-	
+
 });
 
 module.exports.listen = app.listen(app.config.server.port, function(){

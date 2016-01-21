@@ -52,7 +52,9 @@ function gglogin(req, res){
         		var user = new global.Server.Model.UserModel;
 						user.gg_id = profile.id;
 						user.username = email[0];
+						user.email = profile.emails[0].value;
 						user.group = 1;
+						user.money = 0;
 
 		    		user.save(function(err, obj) {
 		        	if(!err) {

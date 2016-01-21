@@ -6,7 +6,7 @@ html( lang="en" )
         .container
             include ../template/menu.jade
             div.container
-                h2 Menu manager
+                h2 Statistics By Day
                 p #{dayOfWeek}, #{str_date}
                 div.row
                     div.col-md-4
@@ -21,34 +21,25 @@ html( lang="en" )
                     div.col-md-8
                         div.panel.panel-default
                             div.panel-heading
-                                h3.panel-title Menu by date
+                                h3.panel-title Statistics
                             div.panel-body
                                 table.table.table-striped.table-bordered
                                     thead
                                         tr
-                                            th Name
-                                            th Price
+                                            th Food
+                                            th Quantity
                                             th Action
                                     tbody
-                                        if menus.length > 0
-                                            - each menu in menus
+                                        if foodList.length > 0
+                                            - each food in foodList
                                                 tr
-                                                    td #{menu.foodName}
-                                                    td #{menu.price}
+                                                    td #{food.foodName}
+                                                    td #{food.count}
                                                     td
-                                                        a.btn.btn-primary(href="/admincp/menu-manager/edit/#{menu._id}") Edit
-                                                        a.btn.btn-danger(href="javascript:void(0)" data-href="/admincp/menu-manager/delete/#{menu._id}" data-toggle="modal" data-target="#confirm-delete") Delete
+                                                        a.btn.btn-primary(href="/admincp/menu-manager/edit/#{food._id}") List
                                         else
                                             tr
                                                 td.text-center(colspan="3") No record is found.
-        div.modal.fade#confirm-delete(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
-            div.modal-dialog
-                div.modal-content
-                    div.modal-header Confirm
-                    div.modal-body Do you want to delete this menu?
-                    div.modal-footer
-                        button( type="button" class="btn btn-default" data-dismiss="modal") Cancel
-                        a.btn.btn-danger.btn-ok OK
         include ../template/foot.jade
         script(src="/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
         script(type="text/javascript").
@@ -56,9 +47,5 @@ html( lang="en" )
                 $('.datepicker').datepicker({
                     format: 'dd/mm/yyyy',
                     autoclose: true
-                });
-
-                $('#confirm-delete').on('show.bs.modal', function(e) {
-                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
                 });
             });

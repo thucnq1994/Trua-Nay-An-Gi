@@ -1,0 +1,40 @@
+doctype
+html( lang="en" )
+    include ../template/head.jade
+    link(rel='stylesheet', href='/bootstrap-datepicker/css/bootstrap-datepicker3.min.css')
+    body
+        .container
+            include ../template/menu.jade
+            div.container
+                form.form-horizontal(method="post" role="form" action="")
+                    h2.page-header Edit user
+                    div.form-group
+                        label.col-sm-3.control-label(for="user_id") ID
+                        div.col-sm-6
+                            input.form-control(type="text" name="user_id" value="#{user._id}" disabled)
+                    div.form-group
+                        label.col-sm-3.control-label(for="gg_id") Google ID
+                        div.col-sm-6
+                            input.form-control(type="text" name="gg_id" value="#{user.gg_id}" disabled)
+                    div.form-group
+                        label.col-sm-3.control-label(for="username") Username
+                        div.col-sm-6
+                            input.form-control(type="text" name="username" value="#{user.username}" disabled)
+                    div.form-group
+                        label.col-sm-3.control-label(for="email") Email
+                        div.col-sm-6
+                            input.form-control.datepicker(type="text" name="email" value="#{user.email}" disabled)
+                    div.form-group
+                        label.col-sm-3.control-label(for="group") Group
+                        div.col-sm-6
+                            select.form-control(name="group")
+                                option(value="1" selected=user.group == 1) Administrator
+                                option(value="2" selected=user.group == 2) User
+                    div.form-group
+                        label.col-sm-3.control-label(for="money") Balance
+                        div.col-sm-6
+                            input.form-control.datepicker(type="number" name="money" value="#{user.money}")
+                    div.form-group.text-center
+                        button.btn.btn-primary(type="submit") Save
+
+        include ../template/foot.jade

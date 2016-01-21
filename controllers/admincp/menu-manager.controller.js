@@ -15,7 +15,7 @@ function getMenuListByDay(req, res){
 
 		if(!verifyDate.isValid()) {
 			sess.message = { content : 'Wrong date format', type : 'danger' };
-			res.redirect('/order/today');
+			res.redirect('/admincp/menu-manager');
 		}
 		
 		orderDate = new Date(verifyDate.format("YYYY-MM-DD") + "T00:00:00.000Z");
