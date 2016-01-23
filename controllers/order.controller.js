@@ -150,6 +150,7 @@ function modifyMoney(user_id, amount, cb){
 	});
 }
 
+// FIXME: please
 function orderFoodByDay(req, res){
 	var data = {};
 	var foodId = req.body.foodId;
@@ -171,57 +172,69 @@ function orderFoodByDay(req, res){
 		return;
 	}
 
-	getFoodById({_id : foodId}, function(err, food){
+	getFoodById({_id : foodId}, function getFoodByIdCallback(err, food){
+
+		debugger;
+
+
 		if(!food) {
-  		res.send(JSON.stringify({ content : 'Menu: Food does not exist!', type : 'danger' }));
+  			res.send(JSON.stringify({ content : 'Menu: Food does not exist!', type : 'danger' }));
 			return;
-  	} else {
-  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
-		searchDate = new Date(searchDate + "T00:00:00.000Z");
-		getCurrentOrderFood({ orderDate : orderDate, userId : req.currentData.current_user.id }, function(err, order){
-			if(order) {
-		  		if(order.menuId === foodId) {
-	  				modifyMoney(req.currentData.current_user.id, food.price, function(err){
-	  					if(err) { throw err }
-			  			removeOrder({ _id : data._id }, function(err){
-			  				res.send(JSON.stringify({ content : 'Deleted order successfully!', type : 'success' }));
-			  				return;
-			  			});
-		  			});
-		  		} else {
-		  			// ReOrder, update current order
-		  			modifyMoney(req.currentData.current_user.id, order.menuPrice, function(err){
-		  				if(err) { throw err }
-	  					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
+	  	} else {
+	  		var searchDate = moment(orderDate, "DD/MM/YYYY").format("YYYY-MM-DD");
+			searchDate = new Date(searchDate + "T00:00:00.000Z");
+			getCurrentOrderFood({ orderDate : orderDate, userId : req.currentData.current_user.id }, function getCurrentOrderFoodCallback(err, order){
+				
+				if(order) {
+			  		if(order.menuId === food._id) {
+			  			console.log('Deleted');
+			  			
+		  				modifyMoney(req.currentData.current_user.id, food.price, function addMoneyForRefund(err){
 		  					if(err) { throw err }
-		  					updateOrder({ _id: data._id }, { menuId : foodId }, function(err){
-						  		res.send(JSON.stringify({ content : 'ReOrdered successfully!', type : 'success' }));
-						  		return;
-					  		});
+				  			removeOrder({ _id : data._id }, function removeOrderCallback(err){
+				  				res.send(JSON.stringify({ content : 'Deleted order successfully!', type : 'success' }));
+				  				return;
+				  			});
+			  			});
+							
+			  		} else {
+			  			console.log('ReOrder');
+			  			// ReOrder, update current order
+			  			
+			  			modifyMoney(req.currentData.current_user.id, order.menuPrice, function(err){
+			  				if(err) { throw err }
+		  					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
+			  					if(err) { throw err }
+			  					updateOrder({ _id: data._id }, { menuId : foodId }, function(err){
+							  		res.send(JSON.stringify({ content : 'ReOrdered successfully!', type : 'success' }));
+							  		return;
+						  		});
+			  				});
 		  				});
-	  				});
-
-		  		}
-		  	} else {
-		  		// Order at first time, create new order
-				modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
-					if(err) { throw err }
-
-					var order = new global.Server.Model.OrderModel;
-					order.userId = req.currentData.current_user.id;
-					order.menuId = foodId;
-					order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
-					order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
-					order.save(function(err) {
+						
+			  		}
+			  	} else {
+			  		console.log('First time order');
+			  		// Order at first time, create new order
+			  		
+					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
 						if(err) { throw err }
-						res.send(JSON.stringify({ content : 'Ordered successfully!', type : 'success' }));
-						return;
+
+						var order = new global.Server.Model.OrderModel();
+						order.userId = req.currentData.current_user.id;
+						order.menuId = foodId;
+						order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
+						order.actTime = moment(moment().format("DD/MM/YYYY"), "DD/MM/YYYY").toISOString();
+						order.save(function(err) {
+							if(err) { throw err }
+							res.send(JSON.stringify({ content : 'Ordered successfully!', type : 'success' }));
+							return;
+						});
 					});
-				});
 					
-		  	}
-		});
-  	}
+			  	}
+			});
+	  	}
 	});
 }
 
