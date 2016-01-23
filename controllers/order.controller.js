@@ -172,6 +172,10 @@ function orderFoodByDay(req, res){
 	}
 
 	getFoodById({_id : foodId}, function getFoodByIdCallback(err, food){
+
+		debugger;
+
+
 		if(!food) {
   			res.send(JSON.stringify({ content : 'Menu: Food does not exist!', type : 'danger' }));
 			return;
@@ -183,7 +187,7 @@ function orderFoodByDay(req, res){
 				if(order) {
 			  		if(order.menuId === food._id) {
 			  			console.log('Deleted');
-			  			/*
+			  			
 		  				modifyMoney(req.currentData.current_user.id, food.price, function addMoneyForRefund(err){
 		  					if(err) { throw err }
 				  			removeOrder({ _id : data._id }, function removeOrderCallback(err){
@@ -191,11 +195,11 @@ function orderFoodByDay(req, res){
 				  				return;
 				  			});
 			  			});
-						*/	
+							
 			  		} else {
 			  			console.log('ReOrder');
 			  			// ReOrder, update current order
-			  			/*
+			  			
 			  			modifyMoney(req.currentData.current_user.id, order.menuPrice, function(err){
 			  				if(err) { throw err }
 		  					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
@@ -206,16 +210,16 @@ function orderFoodByDay(req, res){
 						  		});
 			  				});
 		  				});
-						*/
+						
 			  		}
 			  	} else {
 			  		console.log('First time order');
 			  		// Order at first time, create new order
-			  		/*
+			  		
 					modifyMoney(req.currentData.current_user.id, (-1)*food.price, function(err){
 						if(err) { throw err }
 
-						var order = new global.Server.Model.OrderModel;
+						var order = new global.Server.Model.OrderModel();
 						order.userId = req.currentData.current_user.id;
 						order.menuId = foodId;
 						order.orderDate = moment(orderDate, "DD/MM/YYYY").toISOString();
@@ -226,7 +230,7 @@ function orderFoodByDay(req, res){
 							return;
 						});
 					});
-					*/
+					
 			  	}
 			});
 	  	}
