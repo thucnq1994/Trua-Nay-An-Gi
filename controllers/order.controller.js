@@ -150,6 +150,7 @@ function modifyMoney(user_id, amount, cb){
 	});
 }
 
+// FIXME: please
 function orderFoodByDay(req, res){
 	var data = {};
 	var foodId = req.body.foodId;
