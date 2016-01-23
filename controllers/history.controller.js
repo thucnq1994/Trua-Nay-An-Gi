@@ -71,15 +71,22 @@ function loadMoreHistory(req, res){
 											// Loop for each order of date
 											async.each(orders,
 												function(order, callback_each_order){
+													
 													var reformat = {};
 													reformat.actTime = moment(order.actTime).format("HH:mm:ss DD/MM/YYYY");
 													reformat.orderDate = moment(order.orderDate).format("DD/MM/YYYY");
 													reformat.userId = order.userId;
-													reformat.username = order.userId.username;
-													reformat.menuId = order.menuId;
-													reformat.foodName = order.menuId.foodName;
-													curDate.orders.push(reformat);
+
+													// FIXME:skip if userID not found
+													if(order.userId) {
+														reformat.username = order.userId.username;
+														reformat.menuId = order.menuId;
+														reformat.foodName = order.menuId.foodName;
+														curDate.orders.push(reformat);
+													}
+
 													callback_each_order();
+													
 												},
 												function(err){
 													if (err) return next(err);
